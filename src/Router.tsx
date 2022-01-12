@@ -5,10 +5,10 @@ import Coins from "./routes/coins";
 function Router(){
     return <BrowserRouter>
         <Switch>
-            <Route path="/:coinId">
+            <Route path="/reactPrac/:coinId">
                 <Coin />
             </Route>
-            <Route path="/">
+            <Route path="/reactPrac/">
                 <Coins />
             </Route>
         </Switch>

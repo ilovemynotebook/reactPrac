@@ -90,7 +90,7 @@ function Coins() {
         {isLoading ? <Loader>Loading... please wait a sec!</Loader> : <CoinsList>
             {data?.slice(0,100).map(coin => 
                 <Link to={{
-                    pathname: `/${coin.id}`,
+                    pathname: `/reactPrac/${coin.id}`,
                     state: {name:coin.name}
                 }} key={coin.id}>
                     <Coin>

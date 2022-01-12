@@ -191,7 +191,7 @@ function Coin() {
                     <span>{infoData?.symbol}</span>
                 </OverviewItem>
                 <OverviewItem>
-                    <span>OPEN SOURCE</span>
+                    <span>OPEN SOURCE?</span>
                     <span>{infoData?.open_source ? "Yes" : "No"}</span>
                 </OverviewItem>
             </Overview>
@@ -208,19 +208,19 @@ function Coin() {
             </Overview>
 
             <Tabs>
-                <Link to={`/${coinId}/price`}>
+                <Link to={`/reactPrac/${coinId}/price`}>
                     <Tab isActive={priceMatch !== null}>Price</Tab>
                 </Link>
-                <Link to={`/${coinId}/chart`}>
+                <Link to={`/reactPrac/${coinId}/chart`}>
                     <Tab isActive={chartMatch !== null}>Chart</Tab>
                 </Link>
             </Tabs>
 
             <Switch>
-                <Route path={`/:coinId/price`}>
+                <Route path={`/reactPrac/:coinId/price`}>
                     <Prices />
                 </Route>
-                <Route path={`/:coinId/chart`}>
+                <Route path={`/reactPrac/:coinId/chart`}>
                     <Chart coinId={coinId}/>
                 </Route>
             </Switch>
