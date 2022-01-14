@@ -8,6 +8,7 @@ import Prices from "./Prices";
 import { Chart } from "./Chart";
 import { useQuery } from "react-query";
 import { coinInfo, coinPrice } from "../api";
+import {Helmet} from "react-helmet";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -145,6 +146,10 @@ interface IPriceDate {
     };
 }
 
+interface ICoinProps {
+    isDark:boolean;
+}
+
 function Coin() {
     const { coinId } = useParams<RouteParams>();
     //const {coinId} = useParams<{coinId:string}>();
@@ -154,7 +159,11 @@ function Coin() {
     const chartMatch = useRouteMatch("/:coinId/chart")
 
     const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(["info",coinId], () => coinInfo(coinId));
-    const { isLoading: priceLoading, data: priceData } = useQuery<IPriceDate>(["price",coinId], () => coinPrice(coinId));
+    const { isLoading: priceLoading, data: priceData } = useQuery<IPriceDate>(
+        ["price",coinId],
+        () => coinPrice(coinId),
+        {refetchInterval: 5000}
+        );
     
     /*
     
@@ -174,11 +183,16 @@ function Coin() {
 
 
     const loading = infoLoading || priceLoading;
-    return <Container>
+    return <>
+    <Link to="/reactPrac/"><h5 style={{fontSize:30,margin:10}} > &lt;back</h5></Link>
+    <Container>
+        <Helmet>
+            <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+        </Helmet>
         <Header>
             <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
         </Header>
-    {loading ? 
+        {loading ? 
         <Loader>Loading... please wait a sec!</Loader> : 
         <>
             <Overview>
@@ -191,8 +205,8 @@ function Coin() {
                     <span>{infoData?.symbol}</span>
                 </OverviewItem>
                 <OverviewItem>
-                    <span>OPEN SOURCE?</span>
-                    <span>{infoData?.open_source ? "Yes" : "No"}</span>
+                    <span>Price:</span>
+                    <span>{priceData?.quotes.USD.price.toFixed(2)}</span>
                 </OverviewItem>
             </Overview>
             <div style={{padding:20, fontSize:20}}>{infoData?.description}</div>
@@ -226,6 +240,6 @@ function Coin() {
             </Switch>
         </>
     }
-    </Container>
+    </Container></>
 }
 export default Coin;

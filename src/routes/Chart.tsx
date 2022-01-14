@@ -2,7 +2,8 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
-import { getCurves } from "crypto";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface IHistorical {
     time_open: string;
@@ -17,9 +18,11 @@ interface IHistorical {
 
 interface chartProps{
     coinId:string
+
 };
 
 export function Chart({ coinId }:chartProps){
+    const isDark = useRecoilValue(isDarkAtom)
     const {isLoading,data} = useQuery<IHistorical[]>(["ohlcv",coinId],() =>fetchCoinHistory(coinId));
     return <h1>{isLoading ? "Loading..." : 
         <ApexChart 
@@ -32,7 +35,7 @@ export function Chart({ coinId }:chartProps){
             ]}
             options= {{
                 theme:{
-                    mode:"dark"
+                    mode: isDark ? "dark" : "light"
                 },
                 chart: {
                     height: 400,
@@ -50,10 +53,19 @@ export function Chart({ coinId }:chartProps){
                     labels:{show:false},
                     axisTicks:{show:false},
                     axisBorder:{show:false},
+                    type: "datetime",
+                    categories: data?.map(price=>price.time_close)
                 },
                 stroke: {
                     curve: "smooth",
                     width: 3
+                },
+                fill: { type: "gradient", gradient:{gradientToColors:["blue","yellow"], stops:[30,50,70]}},
+                colors :["green"],
+                tooltip: {
+                    y: {
+                        formatter: (value)=> `$${value.toFixed(3)}`,
+                    }
                 }
             }}
         />}</h1>

@@ -3,6 +3,9 @@ import styled, { createGlobalStyle, keyframes, ThemeProvider } from "styled-comp
 import Circle from "./Circle";
 import Router from "./Router";
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { lightTheme, darkTheme } from "./theme";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
@@ -76,12 +79,12 @@ const H1 = styled.h1`
 
 
 function App() {
+  const isDark = useRecoilValue(isDarkAtom)
   const [name, setName] = useState("")
   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget : {value},
     } = event;//event안의 currentTarget이름을 {value}로 바꾼다
-    //이때 {}가 value에 쳐져 있음은 저 안에 들어가
     setName(value);//ts가 string을 받는지 검사
   }//currentTarget은 ts에서 target대신 선택한 엘레먼트다. 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -89,9 +92,11 @@ function App() {
   };
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true}/>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <Router/>
+        <ReactQueryDevtools initialIsOpen={true}/>
+      </ThemeProvider>
     </>
   );
 }

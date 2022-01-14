@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { fetchCoins } from "../api";
+import { Helmet } from "react-helmet";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -64,9 +67,9 @@ const Img = styled.img`
 `;
 
 function Coins() {
-
+    const setDarkAtom = useSetRecoilState(isDarkAtom)
+    const toggleDarkAtom = () => setDarkAtom(prev => !prev);
     const { isLoading, data } = useQuery<ICoins[]>("allcoins",fetchCoins)
-
 
     const [coins,SetCoins] = useState<ICoins[]>([]);
     const [loading,SetLoading] = useState(true);
@@ -78,14 +81,13 @@ function Coins() {
         })()
     },[])
 
-
-
-
-
-
     return <Container>
+        <Helmet>
+            <title>coins</title>
+        </Helmet>
         <Header>
             <Title>코인</Title>
+            <button onClick={() =>setDarkAtom((prev) => !prev)}>Toggle Mode</button>
         </Header>
         {isLoading ? <Loader>Loading... please wait a sec!</Loader> : <CoinsList>
             {data?.slice(0,100).map(coin => 

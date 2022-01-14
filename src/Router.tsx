@@ -1,6 +1,8 @@
 import {BrowserRouter, Switch, Route} from "react-router-dom";
+import { isPropertySignature } from "typescript";
 import Coin from "./routes/coin";
 import Coins from "./routes/coins";
+
 
 function Router(){
     return <BrowserRouter>
